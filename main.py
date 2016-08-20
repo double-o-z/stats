@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QMessageBox, QDesktopWidget)
+from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QMessageBox, QDesktopWidget, QVBoxLayout)
 from PyQt5.QtCore import QCoreApplication
 
 
@@ -11,16 +11,15 @@ class Example(QWidget):
 
     def init_ui(self):
         self.setWindowTitle('Hello World Application')
-        self.resize(250, 150)
+        self.resize(300, 150)
         self.center()
-
-        self.btn.resize(self.btn.sizeHint())
-        self.btn.move(50, 50)
         self.btn.clicked.connect(self.button_alert)
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.btn)
         self.show()
 
     def button_alert(self):
-        QMessageBox.information(self.parentWidget(),
+        QMessageBox.information(self,
                                 'Message', "Hello World!",
                                 QMessageBox.Ok)
 

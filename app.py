@@ -25,8 +25,11 @@ class MainWidget(QWidget):
             else:
                 splitter2.addWidget(splitter1)
                 splitter2.addWidget(view)
-            view.setModel(model)
-            view.setRootIndex(model.index(QDir.homePath()))
+            if ViewType == QListView:
+                pass
+            else:
+                view.setModel(model)
+                view.setRootIndex(model.index(QDir.homePath()))
         # splitter1.setSizes([100, 200])
         h_box.addWidget(splitter2)
         self.setLayout(h_box)

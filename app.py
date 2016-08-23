@@ -3,7 +3,7 @@ from PyQt5.QtCore import QDir, Qt
 from PyQt5.QtWidgets import (QApplication, QColumnView, QSplitter, QTreeView, QListView, QTableView,
                              QHBoxLayout, QWidget, QStyleFactory)
 
-from filesystemmodel import FileSystemModel
+from data_models import FileSystemModel
 
 
 class MainWidget(QWidget):
@@ -18,6 +18,7 @@ class MainWidget(QWidget):
         model = FileSystemModel()
         model.setRootPath(QDir.rootPath())
         model.setFilter(QDir.NoDotAndDotDot | QDir.AllEntries)
+        # ext_model =
         for ViewType in (QTreeView, QListView, QTableView):
             view = ViewType()
             if ViewType != QTableView:

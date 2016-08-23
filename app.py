@@ -1,7 +1,9 @@
 import sys
 from PyQt5.QtCore import QDir, Qt
-from PyQt5.QtWidgets import (QApplication, QColumnView, QFileSystemModel, QSplitter, QTreeView, QListView, QTableView,
+from PyQt5.QtWidgets import (QApplication, QColumnView, QSplitter, QTreeView, QListView, QTableView,
                              QHBoxLayout, QWidget, QStyleFactory)
+
+from filesystemmodel import FileSystemModel
 
 
 class MainWidget(QWidget):
@@ -13,7 +15,7 @@ class MainWidget(QWidget):
         h_box = QHBoxLayout(self)
         splitter1 = QSplitter(Qt.Horizontal)
         splitter2 = QSplitter(Qt.Vertical)
-        model = QFileSystemModel()
+        model = FileSystemModel()
         model.setRootPath(QDir.rootPath())
         model.setFilter(QDir.NoDotAndDotDot | QDir.AllEntries)
         for ViewType in (QTreeView, QListView, QTableView):

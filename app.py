@@ -12,31 +12,35 @@ class MainWidget(QWidget):
         self.initUI()
 
     def initUI(self):
-        h_box = QHBoxLayout(self)
-
-        splitter1 = QSplitter(Qt.Horizontal)
-        splitter2 = QSplitter(Qt.Vertical)
-
+        # Initializing Models
         file_system_model = FileSystemModel()
         file_system_model.setRootPath(QDir.rootPath())
         file_system_model.setFilter(QDir.NoDotAndDotDot | QDir.AllEntries)
+        extensions_data_model = ExtensionDataModel()
 
+        # Initializing Views
         tree_view = QTreeView()
-        splitter1.addWidget(tree_view)
+        list_view = QListView()
+        table_view = QTableView()
+
+        # Binding views to models
+        # Top Left View
         tree_view.setModel(file_system_model)
         tree_view.setRootIndex(file_system_model.index(QDir.homePath()))
-
-        table_view = QTableView()
-        splitter1.addWidget(table_view)
-        extensions_data_model = ExtensionDataModel()
+        # Top Right View
         table_view.setModel(extensions_data_model)
-
-        list_view = QListView()
-        splitter2.addWidget(splitter1)
-        splitter2.addWidget(list_view)
+        # Bottom View
         list_view.setModel(file_system_model)
         list_view.setRootIndex(file_system_model.index(QDir.homePath()))
 
+        # Layout
+        h_box = QHBoxLayout(self)
+        splitter1 = QSplitter(Qt.Horizontal)
+        splitter2 = QSplitter(Qt.Vertical)
+        splitter1.addWidget(tree_view)
+        splitter1.addWidget(table_view)
+        splitter2.addWidget(splitter1)
+        splitter2.addWidget(list_view)
         # splitter1.setSizes([100, 200])
         h_box.addWidget(splitter2)
         self.setLayout(h_box)
@@ -44,6 +48,7 @@ class MainWidget(QWidget):
         self.showMaximized()
         self.setWindowTitle('WinDirStat')
         self.show()
+        n=5
 
 
 def main():

@@ -53,20 +53,44 @@ class ExtensionDataModel(QAbstractTableModel):
         return QVariant()
 
 
-class TreeDataModel(QAbstractItemModel):
+class TreeDataModel(FileSystemModel):
     def __init__(self):
-        super(QAbstractItemModel, self).__init__()
-        self.columns = []
+        super(FileSystemModel, self).__init__()
+        self.columns = ['Name', 'Size', 'Type', 'Last Modified', 'Percentage', 'Files', 'Folders']
+        self.last_organic_column = 3
+        self.new_columns = 3
         self.data_structure = FoldersDataStructure(ROOT_PATH).sorted_structure()
 
-    def columnCount(self, parent=QModelIndex(), *args, **kwargs):
-        pass
-
-    def rowCount(self, parent=QModelIndex(), *args, **kwargs):
-        pass
+    def data(self, index=QModelIndex(), role=Qt.DisplayRole):
+        if role == Qt.TextAlignmentRole:
+            return Qt.AlignLeft
+        column = index.column()
+        key = self.columns[column]
+        if role == Qt.DisplayRole:
+            # if self.isDir(index):
+            if (self.isDir(index) and column > self.last_organic_column) or column in [1, 4]:
+                p = self.filePath(index)
+                my_data = self.data_structure.get(p, {})
+                return my_data.get(key, "")
+        my_data = super(FileSystemModel, self).data(index, role)
+        return my_data
 
     def headerData(self, section, orientation=Qt.Horizontal, role=Qt.DisplayRole):
-        pass
+        if section > self.last_organic_column:
+            if role == Qt.DisplayRole:
+                if orientation == Qt.Horizontal:
+                    return self.columns[section]
+                elif orientation == Qt.Vertical:
+                    return section + 1
+            elif role == Qt.TextAlignmentRole:
+                return Qt.AlignLeft
+        my_data_header = super(FileSystemModel, self).headerData(section, orientation, role)
+        return my_data_header
 
-    def data(self, index=QModelIndex(), role=Qt.DisplayRole):
-        pass
+    def columnCount(self, parent=QModelIndex(), *args, **kwargs):
+        column_count = super(FileSystemModel, self).columnCount(parent)
+        return column_count + self.new_columns
+
+    def rowCount(self, parent=QModelIndex(), *args, **kwargs):
+        row_count = super(FileSystemModel, self).rowCount(parent)
+        return row_count

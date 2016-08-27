@@ -26,13 +26,13 @@ def ext_full_name(path):
 #     return ""
 
 
+def get_size(path):
+    return os.path.getsize(path)
+
+
 def rand_color():
     levels = range(0, 256, 32)
     return QColor(random.choice(levels), random.choice(levels), random.choice(levels))
-
-
-def file_size(path):
-    return os.path.getsize(path)
 
 
 def find_key(l, elem):

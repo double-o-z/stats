@@ -3,7 +3,7 @@ from PyQt5.QtCore import QDir, Qt
 from PyQt5.QtWidgets import (QApplication, QColumnView, QSplitter, QTreeView, QListView, QTableView,
                              QHBoxLayout, QWidget, QStyleFactory)
 
-from data_models import FileSystemModel, ExtensionDataModel
+from data_models import FileSystemModel, ExtensionDataModel, TreeDataModel, ROOT_PATH
 
 
 class MainWidget(QWidget):
@@ -14,9 +14,12 @@ class MainWidget(QWidget):
     def initUI(self):
         # Initializing Models
         file_system_model = FileSystemModel()
-        file_system_model.setRootPath(QDir.rootPath())
+        file_system_model.setRootPath(ROOT_PATH)
         file_system_model.setFilter(QDir.NoDotAndDotDot | QDir.AllEntries)
         extensions_data_model = ExtensionDataModel()
+        tree_model = TreeDataModel()
+        tree_model.setRootPath(ROOT_PATH)
+        tree_model.setFilter(QDir.NoDotAndDotDot | QDir.AllEntries)
 
         # Initializing Views
         tree_view = QTreeView()
@@ -25,13 +28,13 @@ class MainWidget(QWidget):
 
         # Binding views to models
         # Top Left View
-        tree_view.setModel(file_system_model)
-        tree_view.setRootIndex(file_system_model.index(QDir.homePath()))
+        tree_view.setModel(tree_model)
+        tree_view.setRootIndex(tree_model.index(ROOT_PATH))
         # Top Right View
         table_view.setModel(extensions_data_model)
         # Bottom View
         list_view.setModel(file_system_model)
-        list_view.setRootIndex(file_system_model.index(QDir.homePath()))
+        list_view.setRootIndex(file_system_model.index(ROOT_PATH))
 
         # Layout
         h_box = QHBoxLayout(self)

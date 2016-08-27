@@ -59,7 +59,6 @@ class FoldersDataStructure:
         self.d = {}
         self.create_data()
         self.aggregate_data()
-        # self.sort_data()
         self.format_data()
 
     def sorted_structure(self):

@@ -41,9 +41,9 @@ class MainWidget(QWidget):
         splitter1 = QSplitter(Qt.Horizontal)
         splitter2 = QSplitter(Qt.Vertical)
         splitter1.addWidget(tree_view)
-        splitter1.addWidget(table_view)
+        # splitter1.addWidget(table_view)
         splitter2.addWidget(splitter1)
-        splitter2.addWidget(list_view)
+        # splitter2.addWidget(list_view)
         # splitter1.setSizes([100, 200])
         h_box.addWidget(splitter2)
         self.setLayout(h_box)
@@ -51,7 +51,6 @@ class MainWidget(QWidget):
         self.showMaximized()
         self.setWindowTitle('WinDirStat')
         self.show()
-        n=5
 
 
 def main():

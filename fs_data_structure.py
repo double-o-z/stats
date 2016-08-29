@@ -56,8 +56,11 @@ class ExtensionsDataStructure:
 class FoldersDataStructure:
     def __init__(self, path):
         self.path = path
+        self.depth = 0
         self.d = {}
-        self.create_data()
+        # self.create_data()
+        self.create_data_dfs()
+        # self.create_data_bfs()
         self.aggregate_data()
         self.format_data()
 
@@ -65,37 +68,60 @@ class FoldersDataStructure:
         return self.d
 
     def create_data(self):
-        a = self.d
-        files_total = 0
-        folders_total = 0
-        size_total = 0
-        last_dir = ""
         for cur_dir, sub_dirs, files in os.walk(self.path, topdown=False):
-            size_count = 0
-            files_count = len(files)
-            folders_count = len(sub_dirs)
-            for file in files:
-                size = get_size(os.path.join(cur_dir, file))
-                file_path = os.path.join(cur_dir, file)
-                self.d[file_path] = {'Size': size}
-                size_count += size
-
-            data = self.d.get(cur_dir, False)
+            if os.path.islink(cur_dir):
+                continue
+            data = self.d.get(cur_dir, {})
             if not data:
-                data = {'Files': 0, 'Folders': 0, 'Size': 0}
+                len_files = len([f for f in files if not os.path.islink(os.path.join(cur_dir, f))])
+                len_sub_dirs = len([d for d in sub_dirs if not os.path.islink(os.path.join(cur_dir, d))])
+                data = {'Size': 0, 'Files': len_files, 'Folders': len_sub_dirs}
                 for sub_dir in sub_dirs:
-                    key = os.path.join(cur_dir, sub_dir)
-                    if os.path.islink(key):
+                    dir_path = os.path.join(cur_dir, sub_dir)
+                    if os.path.islink(dir_path):
                         continue
-                    data['Size'] += self.d[key]['Size']
-                    data['Files'] += self.d[key]['Files']
-                    data['Folders'] += self.d[key]['Folders']
+                    data['Size'] += self.d[dir_path]['Size']
+                    data['Files'] += self.d[dir_path]['Files']
+                    data['Folders'] += self.d[dir_path]['Folders']
+                for file in files:
+                    file_path = os.path.join(cur_dir, file)
+                    if os.path.islink(file_path):
+                        continue
+                    size = get_size(file_path)
+                    self.d[file_path] = {'Size': size}
+                    data['Size'] += size
+                self.d[cur_dir] = data
 
-            data['Size'] += size_count
-            data['Files'] += files_count
-            data['Folders'] += folders_count
+    def create_data_dfs(self, path=None):
+        if not path:
+            path = self.path
+        data = self.d.get(path, {})
+        if not data:
+            data = {'Size': 0, 'Files': 0, 'Folders': 0}
+            for item in os.listdir(path):
+                full_path = os.path.join(path, item)
 
-            self.d[cur_dir] = data
+                if os.path.islink(full_path):
+                    continue
+                elif os.path.isfile(full_path):
+                    size = get_size(full_path)
+                    self.d[full_path] = {'Size': size}
+                    data['Files'] += 1
+                    data['Size'] += size
+                elif os.path.isdir(full_path):
+                    self.create_data_dfs(full_path)
+                    data['Folders'] += 1
+                    data['Size'] += self.d[full_path]['Size']
+                    data['Files'] += self.d[full_path]['Files']
+                    data['Folders'] += self.d[full_path]['Folders']
+
+            self.d[path] = data
+
+    def create_data_bfs(self, path=None):
+        if not path:
+            path = self.path
+        data = self.d.get(path, {})
+        depth = self.depth
 
     def aggregate_data(self):
         for key, value in self.d.items():

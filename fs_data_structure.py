@@ -157,7 +157,6 @@ class FoldersDataStructure:
             data['Folders'] += self.d[sub_dir]['Folders']
 
         self.d[path] = data
-        a = 0
 
     def aggregate_data(self):
         for key, value in self.d.items():

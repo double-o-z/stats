@@ -5,3 +5,4 @@ lib
 local
 share
 pip-selfcheck.json
+.pyc

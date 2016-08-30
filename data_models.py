@@ -3,7 +3,7 @@ from PyQt5.QtCore import QAbstractTableModel, QModelIndex, QVariant, QAbstractIt
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QColor
 
-from fs_data_structure import ExtensionsDataStructure, FoldersDataStructure
+from data_structures import ExtensionsDataStructure, FoldersDataStructure
 
 ROOT_PATH = "/home/batman/dev"
 
